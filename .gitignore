@@ -2,3 +2,4 @@ venv
 .venv
 .mypy_cache
 test.txt
+.env
