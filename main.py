@@ -58,7 +58,7 @@ class Bot:
     win_or_mac = return_system_divider()
     ctrl = (lambda divider: "ctrl" if divider == 1 else "cmd")(win_or_mac)
     world = "Pendulum"
-    blacklist = {"Medivioo"}
+    blacklist = {"Medivioo"}  # Razhorfora Vugorn
     api_call = ApiCall()
 
     def __init__(self):
@@ -72,6 +72,35 @@ class Bot:
             self.anti_afk()
             self.use_up_mana()
             self.check_blacklist()
+
+        while self.bot_on is False:
+            self.log_back_in_and_start_bot_if_possible()
+
+    def log_back_in_and_start_bot_if_possible(self):
+        if not self.check_api_if_danger_persist():
+            time.sleep(randint(300, 600))
+            self.log_back_on_and_continue()
+
+    def log_back_on_and_continue(self):
+        self.bot_on = True
+        keyboard.press_and_release("enter")
+        self.run_bot()
+
+    def check_api_if_danger_persist(self):
+        cached_at, players, new_data = self.api_call.call_api_online_players(self.world)
+
+        online_blacklist_players_count = 0
+
+        if new_data:
+            for player in players:
+                nick = player["name"]
+                if nick in self.blacklist:
+                    online_blacklist_players_count += 1
+
+            if online_blacklist_players_count == 0:
+                return False
+            else:
+                return True
 
     def turn_bot_off_and_log(self, nick):
         self.bot_on = False
@@ -93,7 +122,7 @@ class Bot:
                     print(datetime.datetime.fromtimestamp(cached_at))
 
     def find_food(self):
-        food = pyautogui.locateOnScreen("ss/mushrooms.png", confidence=0.8)
+        food = pyautogui.locateOnScreen("ss/mushrooms.png")
 
         return food
 
@@ -101,7 +130,7 @@ class Bot:
         """
         check if hungry, if so then make sure food location is available (could be that one stack was eaten so we need to find another one)
         """
-        hungry_location = pyautogui.locateCenterOnScreen("ss/hungry.png")
+        hungry_location = pyautogui.locateCenterOnScreen("ss/hungry.png", confidence=0.8)
 
         if hungry_location:
             self.food = self.find_food()
@@ -112,7 +141,7 @@ class Bot:
         return False
 
     def _eat_food(self):
-        left, top = self.food.left / self.win_or_mac, self.food.top / self.win_or_mac
+        left, top = self.food.left * self.win_or_mac, self.food.top * self.win_or_mac
 
         pyautogui.moveTo(left, top)
         pyautogui.doubleClick(button="right")
@@ -150,7 +179,6 @@ class Bot:
         pix = pyautogui.pixel(2531 * self.win_or_mac, 118 * self.win_or_mac)
 
         if pix != self.mana:
-            print(pix)
             # pyautogui.moveTo(1411, 148)
             # time.sleep(100)
             return True
@@ -167,12 +195,12 @@ class Bot:
                 time.sleep(0.5)
 
     def logout(self):
-        """log out"""
+        """log out - for some reason pyautogui functions did not work with "q" """
         keyboard.press("ctrl")
         keyboard.press("q")
         time.sleep(0.5)
         keyboard.release("ctrl")
-        print("bot turned off")
+
         time.sleep(0.1)
         self.bot_on = False
 
