@@ -58,7 +58,7 @@ class Bot:
     win_or_mac = return_system_divider()
     ctrl = (lambda divider: "ctrl" if divider == 1 else "cmd")(win_or_mac)
     world = "Pendulum"
-    blacklist = {"Medivioo"}  # Razhorfora Vugorn
+    blacklist = {"Mael Drake"}  # Razhorfora Vugorn
     api_call = ApiCall()
 
     def __init__(self):
@@ -103,6 +103,8 @@ class Bot:
                 return True
 
     def turn_bot_off_and_log(self, nick):
+        pyautogui.press("right")
+        time.sleep(randint(300, 600))
         self.bot_on = False
 
         self.logout()
