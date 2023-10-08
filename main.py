@@ -59,6 +59,7 @@ class Bot:
     ctrl = (lambda divider: "ctrl" if divider == 1 else "cmd")(win_or_mac)
     world = "Pendulum"
     blacklist = {"Mael Drake"}  # Razhorfora Vugorn
+    key_to_safety = "right"
     api_call = ApiCall()
 
     def __init__(self):
@@ -103,8 +104,9 @@ class Bot:
                 return True
 
     def turn_bot_off_and_log(self, nick):
-        pyautogui.press("right")
-        time.sleep(randint(300, 600))
+        if self.key_to_safety is not None:
+            pyautogui.press("right")
+            time.sleep(randint(300, 600))
         self.bot_on = False
 
         self.logout()
