@@ -118,93 +118,118 @@ class Fishing:
         self.x_range = [660, 1200]
         self.city = "abukir"
         self.fish_spots = [
-            [571, 1100],
-            [577, 1050],
-            [571, 986],
-            [570, 925],
-            [574, 851],
-            [573, 794],
-            [568, 729],
-            [564, 658],
-            [574, 604],
-            [567, 532],
-            [575, 455],
-            [576, 390],
-            [582, 320],
-            [581, 263],
-            [574, 195],
-            [579, 142],
-            [586, 97],
-            [648, 103],
-            [655, 177],
-            [657, 230],
-            [664, 293],
-            [669, 366],
-            [669, 442],
-            [676, 525],
-            [688, 610],
-            [686, 676],
-            [690, 759],
-            [694, 840],
-            [682, 897],
-            [690, 968],
-            [685, 1056],
-            [691, 1117],
-            [759, 1106],
-            [749, 1037],
-            [756, 958],
-            [756, 872],
-            [753, 799],
-            [750, 740],
-            [754, 657],
-            [759, 580],
-            [770, 504],
-            [774, 428],
-            [775, 353],
-            [781, 259],
-            [786, 186],
-            [784, 109],
-            [910, 106],
-            [899, 197],
-            [900, 272],
-            [905, 336],
-            [897, 420],
-            [902, 495],
-            [905, 582],
-            [909, 664],
-            [914, 719],
-            [913, 812],
-            [916, 891],
-            [921, 955],
-            [928, 1038],
-            [1012, 1059],
-            [1004, 972],
-            [999, 849],
-            [1000, 755],
-            [998, 691],
-            [996, 573],
-            [996, 501],
-            [997, 441],
-            [1004, 380],
-            [1006, 305],
-            [1005, 236],
-            [1013, 172],
-            [1014, 113],
-            [1144, 112],
-            [1136, 192],
-            [1143, 280],
-            [1148, 362],
-            [1148, 423],
-            [1150, 480],
-            [1154, 582],
-            [1173, 666],
-            [1178, 744],
-            [1178, 823],
-            [1190, 907],
-            [1202, 973],
-            [1193, 1061],
-            [1202, 1122],
-            [1201, 1119],
+            [577, 1100],
+            [583, 995],
+            [587, 899],
+            [585, 802],
+            [577, 703],
+            [583, 612],
+            [587, 511],
+            [578, 397],
+            [589, 299],
+            [582, 200],
+            [595, 107],
+            [680, 96],
+            [664, 190],
+            [670, 287],
+            [663, 387],
+            [664, 494],
+            [673, 598],
+            [684, 694],
+            [672, 792],
+            [662, 902],
+            [683, 997],
+            [673, 1083],
+            [784, 1095],
+            [770, 986],
+            [770, 896],
+            [771, 800],
+            [770, 693],
+            [775, 601],
+            [776, 501],
+            [770, 410],
+            [771, 297],
+            [774, 192],
+            [782, 95],
+            [881, 95],
+            [874, 184],
+            [871, 290],
+            [875, 401],
+            [869, 504],
+            [868, 588],
+            [874, 696],
+            [877, 801],
+            [871, 883],
+            [875, 972],
+            [877, 1096],
+            [964, 1104],
+            [962, 973],
+            [962, 903],
+            [980, 796],
+            [979, 696],
+            [977, 599],
+            [969, 505],
+            [980, 403],
+            [980, 302],
+            [989, 212],
+            [987, 100],
+            [1075, 98],
+            [1074, 197],
+            [1076, 302],
+            [1088, 392],
+            [1073, 497],
+            [1073, 592],
+            [1078, 699],
+            [1080, 802],
+            [1088, 907],
+            [1083, 992],
+            [1078, 1093],
+            [1175, 1099],
+            [1166, 994],
+            [1168, 887],
+            [1161, 798],
+            [1276, 800],
+            [1284, 905],
+            [1273, 991],
+            [1275, 1103],
+            [1391, 1105],
+            [1374, 1009],
+            [1387, 883],
+            [1378, 792],
+            [1455, 793],
+            [1463, 902],
+            [1464, 997],
+            [1468, 1086],
+            [1569, 1085],
+            [1573, 977],
+            [1582, 900],
+            [1579, 812],
+            [1574, 711],
+            [1575, 587],
+            [1691, 590],
+            [1682, 700],
+            [1689, 804],
+            [1693, 888],
+            [1686, 990],
+            [1676, 1097],
+            [1767, 1096],
+            [1784, 1004],
+            [1790, 901],
+            [1794, 794],
+            [1788, 693],
+            [1791, 601],
+            [1897, 589],
+            [1886, 698],
+            [1895, 800],
+            [1904, 890],
+            [1885, 997],
+            [1871, 1096],
+            [1994, 1104],
+            [1980, 986],
+            [1983, 877],
+            [1978, 792],
+            [1985, 697],
+            [1982, 592],
         ]
 
     def find_fishing_rod(self):
@@ -225,12 +250,13 @@ class Fishing:
         # x, y = self.get_spot_to_fish()
         for cords in self.fish_spots:
             x, y = cords
+            time.sleep(0.2)
             pyautogui.moveTo(self.fishing_rod)
             time.sleep(0.10)
             pyautogui.click(button="right")
-            time.sleep(0.10)
+            time.sleep(0.15)
             pyautogui.moveTo(x, y)
-            time.sleep(0.10)
+            time.sleep(0.15)
             pyautogui.click(button="left")
 
     def get_spot_to_fish(self):
@@ -247,10 +273,11 @@ class Bot:
     bot_on = True
     win_or_mac = return_system_divider()
     ctrl = (lambda divider: "ctrl" if divider == 1 else "cmd")(win_or_mac)
-    blacklist = {"Medivioo", "Yeffo", "Queen Heal", "Ran Run"}  # Razhorfora Vugorn
-    key_to_safety = "right"
+    blacklist = {"Medivioo", "Yeffo", "Queen Heal", "Ran Run", "Switchbladez"}
+    key_to_safety = "down"
     api_call = ApiCall()
     fishing = Fishing()
+    fishing_done_at = None
     ring_swap = Ring(swap_rings=True)
     runes_made_at = 0  # timestamp
 
@@ -259,7 +286,7 @@ class Bot:
             self.find_food()
         )  # find mushrooms and remember its position on the screen
 
-    def run_rune_maker(self):
+    def run_rune_maker_and_fish(self):
         pyautogui.FAILSAFE = True
 
         while self.bot_on is True:
@@ -268,10 +295,22 @@ class Bot:
             self.check_if_hungry()
             self.anti_afk()
             self.use_up_mana()
-            self.check_blacklist()
+            good_to_fish = self.check_blacklist()
+
+            if good_to_fish:
+                self.run_fishing_along_with_rune_making()
 
         # while self.bot_on is False:
         #     self.log_back_in_and_start_bot_if_possible()
+
+    def run_fishing_along_with_rune_making(self):
+        current = round(datetime.datetime.now().timestamp(), None)
+
+        if self.fishing_done_at is not None and current - self.fishing_done_at < 15:
+            pass
+        else:
+            self.fishing.use_fishing_rod()
+            self.fishing_done_at = round(datetime.datetime.now().timestamp(), None)
 
     def run_fishing(self):
         pyautogui.FAILSAFE = True
@@ -313,8 +352,8 @@ class Bot:
 
     def turn_bot_off_and_log(self, nick):
         if self.key_to_safety is not None:
-            pyautogui.press("right")
-            time.sleep(randint(300, 600))
+            pyautogui.press(self.key_to_safety)
+            time.sleep(randint(1, 10))
         self.bot_on = False
 
         self.logout()
@@ -334,6 +373,8 @@ class Bot:
                 if nick in self.blacklist:
                     self.turn_bot_off_and_log(nick)
                     print(datetime.datetime.fromtimestamp(cached_at))
+                    return False
+        return True
 
     def find_food(self):
         food = pyautogui.locateOnScreen("ss/mushrooms.png")
@@ -379,7 +420,7 @@ class Bot:
         "anti afk movements + rng element to make char moves rarely"
 
         arrow_keys = ["left", "right", "up", "down"]
-        rng_move = randint(1, 1000)
+        rng_move = randint(1, 75)
 
         # rng_move = 1
         if rng_move == 1:
@@ -396,8 +437,8 @@ class Bot:
         if current_time - self.runes_made_at < 500:
             return False
 
-        mana = pyautogui.screenshot("ss/ss_mana.png", region=(2531, 118, 1, 1))
-        pix = pyautogui.pixel(2531 * self.win_or_mac, 118 * self.win_or_mac)
+        mana = pyautogui.screenshot("ss/ss_mana.png", region=(2520, 98, 1, 1))
+        pix = pyautogui.pixel(2520 * self.win_or_mac, 98 * self.win_or_mac)
 
         if pix != self.mana:
             # pyautogui.moveTo(1411, 148)
@@ -431,18 +472,22 @@ class Bot:
 if __name__ == "__main__":
     bot = Bot()
     time.sleep(2)
-    # bot.run_rune_maker()
+    bot.run_rune_maker_and_fish()
     # bot.run_fishing()
-    pyautogui.moveTo(1154, 582)
-    l = []
-    ctr = 1
-    while True:
-        time.sleep(1)
-        x, y = pyautogui.position()
-        l.append([x, y])
-        print(x, y)
-        ctr += 1
-        if ctr % 10 == 0:
-            print(l)
-
-    # pyautogui.moveTo(581, 983)
+    # pyautogui.moveTo(1154, 582)
+    # l = []
+    # ctr = 1
+    # while True:
+    #     time.sleep(1)
+    #     x, y = pyautogui.position()
+    #     l.append([x, y])
+    #     print(x, y)
+    #     ctr += 1
+    #     if ctr % 10 == 0:
+    #         print(l)
+    # while True:
+    #     time.sleep(1)
+    #     pyautogui.moveTo(2520, 98)
+    #     x, y = pyautogui.position()
+    #     print(x, y)
+    #     print(pyautogui.pixel(x, y))
