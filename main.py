@@ -1,3 +1,4 @@
+from multiprocessing import Process, Manager
 import time
 from random import randint, shuffle, uniform
 import keyboard
@@ -309,7 +310,9 @@ class Bot:
         if self.fishing_done_at is not None and current - self.fishing_done_at < 15:
             pass
         else:
-            self.fishing.use_fishing_rod()
+            run = self.fishing.use_fishing_rod(should_run)
+            if not run:
+                self.turn_bot_off_and_log
             self.fishing_done_at = round(datetime.datetime.now().timestamp(), None)
 
     def run_fishing(self):
@@ -468,11 +471,32 @@ class Bot:
         time.sleep(0.1)
         self.bot_on = False
 
+    def check_vip(self, should_run, pic="Slookey"):
+        pass
+
+        while True:
+            player = pyautogui.locateOnScreen(f"ss/{pic}.png", confidence=0.8)
+
+            if player:
+                print("found Slookey!")
+                self.turn_bot_off_and_log("Slookey - From Vip")
+                return
+
 
 if __name__ == "__main__":
     bot = Bot()
     time.sleep(2)
-    bot.run_rune_maker_and_fish()
+
+    with Manager() as bot_manager:
+        should_run = bot_manager.dict()
+        should_run["run"] = True
+
+    main_process = Process(target=bot.run_rune_maker_and_fish)
+    vip_process = Process(target=bot.check_vip, args=(should_run,))
+
+    main_process.start()
+    vip_process.start()
+
     # bot.run_fishing()
     # pyautogui.moveTo(1154, 582)
     # l = []
