@@ -12,6 +12,9 @@ from typing import Union
 import os
 from dotenv import load_dotenv
 from enum import Enum
+from fishing import Fishing
+from ring import Ring
+from api import ApiCall
 
 load_dotenv()
 
@@ -26,247 +29,6 @@ def return_system_divider():
         return 2
 
 
-class ApiCall:
-    def __init__(self, last_call_ts=None, cached_for=60) -> None:
-        self.last_call_ts: Union[int, None] = last_call_ts
-        self.players: list = []  # to return in case we are still within cache period
-        self.cached_for = cached_for
-        self.world = "Pendulum"
-
-    def call_api_online_players(self):
-        if self.check_if_cache_expired():
-            req = requests.get(
-                f"https://medivia.online/api/public/online/{self.world}",
-                auth=(username, password),
-            )
-            json_resp = req.json()
-            cached_at, cached_for, players = (
-                json_resp["cached_at"],
-                json_resp["cached_for"],
-                json_resp["players"],
-            )
-            self.last_call_ts, self.cached_for = (
-                cached_at,
-                cached_for,
-            )  # save the newest cached_at timestamp
-            return cached_at, players, True
-        else:
-            return self.last_call_ts, self.players, False
-
-    def check_if_cache_expired(self):
-        current_timestamp = round(datetime.datetime.now().timestamp(), None)
-
-        if self.last_call_ts is not None:
-            # return false for 0-59 seconds
-            if current_timestamp - self.last_call_ts < self.cached_for:
-                return False
-        return True
-
-
-class RingTimer(Enum):
-    roh = 480
-    life_ring = 1200
-
-
-class Ring:
-    def __init__(self, last_swapped=None, swap_rings=False) -> None:
-        self.last_swapped = last_swapped
-        self.swap_rings = swap_rings
-        self.rings_available = True
-        self.ring_type = "roh"
-
-    def swap_ring_procedure(self):
-        if self.check_ring_time():
-            ring_place = pyautogui.locateCenterOnScreen(
-                "ss/ring_spot.png", confidence=0.90
-            )
-
-            if ring_place:
-                self.move_ring_to_spot(ring_place)
-
-    def move_ring_to_spot(self, ring_place):
-        ring = pyautogui.locateCenterOnScreen(
-            f"ss/{self.ring_type}.png", confidence=0.9
-        )
-
-        if not ring:
-            self.rings_available = False
-            return
-        pyautogui.moveTo(ring)
-        pyautogui.click()
-        pyautogui.dragTo(ring_place, duration=1)
-        self.last_swapped = round(datetime.datetime.now().timestamp(), None)
-        time.sleep(1)
-
-    def check_ring_time(self):
-        time_to_expire = RingTimer[self.ring_type].value
-
-        current_time = round(datetime.datetime.now().timestamp(), None)
-
-        if self.last_swapped is None or (
-            current_time - self.last_swapped > time_to_expire
-        ):
-            return True
-        else:
-            return False
-
-
-class Fishing:
-    def __init__(self) -> None:
-        self.fishing_rod = self.find_fishing_rod()
-        self.y_range = [120, 974]
-        # self.x_range = [660, 1900]
-        self.x_range = [660, 1200]
-        self.city = "abukir"
-        self.fish_spots = [
-            [577, 1100],
-            [583, 995],
-            [587, 899],
-            [585, 802],
-            [577, 703],
-            [583, 612],
-            [587, 511],
-            [578, 397],
-            [589, 299],
-            [582, 200],
-            [595, 107],
-            [680, 96],
-            [664, 190],
-            [670, 287],
-            [663, 387],
-            [664, 494],
-            [673, 598],
-            [684, 694],
-            [672, 792],
-            [662, 902],
-            [683, 997],
-            [673, 1083],
-            [784, 1095],
-            [770, 986],
-            [770, 896],
-            [771, 800],
-            [770, 693],
-            [775, 601],
-            [776, 501],
-            [770, 410],
-            [771, 297],
-            [774, 192],
-            [782, 95],
-            [881, 95],
-            [874, 184],
-            [871, 290],
-            [875, 401],
-            [869, 504],
-            [868, 588],
-            [874, 696],
-            [877, 801],
-            [871, 883],
-            [875, 972],
-            [877, 1096],
-            [964, 1104],
-            [962, 973],
-            [962, 903],
-            [980, 796],
-            [979, 696],
-            [977, 599],
-            [969, 505],
-            [980, 403],
-            [980, 302],
-            [989, 212],
-            [987, 100],
-            [1075, 98],
-            [1074, 197],
-            [1076, 302],
-            [1088, 392],
-            [1073, 497],
-            [1073, 592],
-            [1078, 699],
-            [1080, 802],
-            [1088, 907],
-            [1083, 992],
-            [1078, 1093],
-            [1175, 1099],
-            [1166, 994],
-            [1168, 887],
-            [1161, 798],
-            [1276, 800],
-            [1284, 905],
-            [1273, 991],
-            [1275, 1103],
-            [1391, 1105],
-            [1374, 1009],
-            [1387, 883],
-            [1378, 792],
-            [1455, 793],
-            [1463, 902],
-            [1464, 997],
-            [1468, 1086],
-            [1569, 1085],
-            [1573, 977],
-            [1582, 900],
-            [1579, 812],
-            [1574, 711],
-            [1575, 587],
-            [1691, 590],
-            [1682, 700],
-            [1689, 804],
-            [1693, 888],
-            [1686, 990],
-            [1676, 1097],
-            [1767, 1096],
-            [1784, 1004],
-            [1790, 901],
-            [1794, 794],
-            [1788, 693],
-            [1791, 601],
-            [1897, 589],
-            [1886, 698],
-            [1895, 800],
-            [1904, 890],
-            [1885, 997],
-            [1871, 1096],
-            [1994, 1104],
-            [1980, 986],
-            [1983, 877],
-            [1978, 792],
-            [1985, 697],
-            [1982, 592],
-        ]
-
-    def find_fishing_rod(self):
-        fs = pyautogui.locateOnScreen("ss/fishing_rod.png", confidence=0.8)
-
-        return fs
-
-    def find_fishing_spots(self):
-        # * work in progress
-        sea = pyautogui.locateAllOnScreen(f"ss/sea_{self.city}.png", confidence=0.3)
-        coords_range = []
-
-        for spot in sea:
-            coords_range.append(spot)
-
-    def use_fishing_rod(self):
-        print("fishing...")
-        # x, y = self.get_spot_to_fish()
-        for cords in self.fish_spots:
-            x, y = cords
-            time.sleep(0.2)
-            pyautogui.moveTo(self.fishing_rod)
-            time.sleep(0.10)
-            pyautogui.click(button="right")
-            time.sleep(0.15)
-            pyautogui.moveTo(x, y)
-            time.sleep(0.15)
-            pyautogui.click(button="left")
-
-    def get_spot_to_fish(self):
-        x = randint(*self.x_range)
-        y = randint(*self.y_range)
-
-        return x, y
-
-
 class Bot:
     is_hungry: bool = True
     mana = (26, 26, 26)
@@ -276,10 +38,9 @@ class Bot:
     ctrl = (lambda divider: "ctrl" if divider == 1 else "cmd")(win_or_mac)
     blacklist = {"Medivioo", "Yeffo", "Queen Heal", "Ran Run", "Switchbladez"}
     key_to_safety = "down"
-    api_call = ApiCall()
+    api_call = ApiCall(username, password)
     fishing = Fishing()
-    fishing_done_at = None
-    ring_swap = Ring(swap_rings=True)
+    ring_swap = Ring("life_ring", swap_rings=True)
     runes_made_at = 0  # timestamp
 
     def __init__(self):
@@ -287,7 +48,7 @@ class Bot:
             self.find_food()
         )  # find mushrooms and remember its position on the screen
 
-    def run_rune_maker_and_fish(self):
+    def run_rune_maker_and_fish(self, should_run):
         pyautogui.FAILSAFE = True
 
         while self.bot_on is True:
@@ -299,21 +60,32 @@ class Bot:
             good_to_fish = self.check_blacklist()
 
             if good_to_fish:
-                self.run_fishing_along_with_rune_making()
+                continue_running = self.run_fishing_along_with_rune_making(should_run)
+                if not continue_running:
+                    return False
 
         # while self.bot_on is False:
         #     self.log_back_in_and_start_bot_if_possible()
 
-    def run_fishing_along_with_rune_making(self):
+    def run_fishing_along_with_rune_making(self, should_run):
         current = round(datetime.datetime.now().timestamp(), None)
 
-        if self.fishing_done_at is not None and current - self.fishing_done_at < 15:
+        if (
+            self.fishing.fishing_done_at is not None
+            and current - self.fishing.fishing_done_at < 15
+        ):
             pass
         else:
             run = self.fishing.use_fishing_rod(should_run)
+
             if not run:
-                self.turn_bot_off_and_log
-            self.fishing_done_at = round(datetime.datetime.now().timestamp(), None)
+                self.turn_bot_off_and_log("TEST")
+                return False
+
+            self.fishing.fishing_done_at = round(
+                datetime.datetime.now().timestamp(), None
+            )
+        return True
 
     def run_fishing(self):
         pyautogui.FAILSAFE = True
@@ -358,6 +130,7 @@ class Bot:
             pyautogui.press(self.key_to_safety)
             time.sleep(randint(1, 10))
         self.bot_on = False
+        print("bot turned off")
 
         self.logout()
         logging.basicConfig(
@@ -381,6 +154,8 @@ class Bot:
 
     def find_food(self):
         food = pyautogui.locateOnScreen("ss/mushrooms.png")
+        if food is None:
+            food = pyautogui.locateOnScreen("ss/fish.png", confidence=0.8)
 
         return food
 
@@ -401,15 +176,16 @@ class Bot:
         return False
 
     def _eat_food(self):
+        print("eating")
         left, top = self.food.left * self.win_or_mac, self.food.top * self.win_or_mac
 
         pyautogui.moveTo(left, top)
-        pyautogui.doubleClick(button="right")
-        time.sleep(0.25)
-        pyautogui.click(button="right")
-        time.sleep(0.25)
-        pyautogui.click(button="right")
-        print("eating food")
+
+        for i in range(4):
+            time.sleep(0.25)
+            print("eating food")
+            pyautogui.click(button="right")
+            time.sleep(0.25)
 
     def _press_cmd_and_key(self, key):
         rng = uniform(0.10, 0.12)
@@ -471,16 +247,27 @@ class Bot:
         time.sleep(0.1)
         self.bot_on = False
 
-    def check_vip(self, should_run, pic="Slookey"):
-        pass
+    def check_dangerous_player_vip(self, player, should_run):
+        player_vip = pyautogui.locateOnScreen(f"ss/{player}.png", confidence=0.8)
+
+        print("running check")
+        if player_vip:
+            print("found player in Vip!")
+            should_run["run"] = False
+            self.turn_bot_off_and_log(f"{player_vip}")
+
+            return True
+        return False
+
+    def check_vip(self, should_run):
+        # * dangerous player must correspond to a png screenshot.
+        dangerous_players = ["Switchbladez"]
 
         while True:
-            player = pyautogui.locateOnScreen(f"ss/{pic}.png", confidence=0.8)
-
-            if player:
-                print("found Slookey!")
-                self.turn_bot_off_and_log("Slookey - From Vip")
-                return
+            for player in dangerous_players:
+                found = self.check_dangerous_player_vip(player, should_run)
+                if found:
+                    return found
 
 
 if __name__ == "__main__":
@@ -491,11 +278,19 @@ if __name__ == "__main__":
         should_run = bot_manager.dict()
         should_run["run"] = True
 
-    main_process = Process(target=bot.run_rune_maker_and_fish)
-    vip_process = Process(target=bot.check_vip, args=(should_run,))
+        main_process = Process(target=bot.run_rune_maker_and_fish, args=(should_run,))
+        vip_process = Process(target=bot.check_vip, args=(should_run,))
 
-    main_process.start()
-    vip_process.start()
+        main_process.start()
+
+        vip_process.start()
+        main_process.join()
+        vip_process.join()
+
+        # vip_process.terminate()
+        # vip_process.join()
+        # main_process.terminate()
+        # main_process.join()
 
     # bot.run_fishing()
     # pyautogui.moveTo(1154, 582)
