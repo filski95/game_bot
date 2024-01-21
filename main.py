@@ -203,10 +203,10 @@ class Bot:
         pyautogui.moveTo(self.food.x / self.win_or_mac, self.food.y / self.win_or_mac)
 
         for i in range(8):
-            time.sleep(0.25)
+            time.sleep(0.05)
             print("eating food")
             pyautogui.click(button="right")
-            time.sleep(0.25)
+            time.sleep(0.05)
 
     def _press_cmd_and_key(self, key):
         rng = uniform(0.10, 0.12)
