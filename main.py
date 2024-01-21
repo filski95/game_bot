@@ -210,11 +210,18 @@ class Bot:
 
     def _press_cmd_and_key(self, key):
         rng = uniform(0.10, 0.12)
-        keyboard.press(self.ctrl)
-        pyautogui.press(key)
-        time.sleep(rng)
-        keyboard.release(self.ctrl)
-        time.sleep(rng)
+        if self.win_or_mac == 1:
+            keyboard.press(self.ctrl)
+            pyautogui.press(key)
+            time.sleep(rng)
+            keyboard.release(self.ctrl)
+            time.sleep(rng)
+        else:
+            pyautogui.keyDown(self.ctrl)
+            pyautogui.press(key)
+            time.sleep(rng)
+            pyautogui.keyUp("self.ctrl")
+            time.sleep(rng)
 
     def anti_afk(self):
         "anti afk movements + rng element to make char moves rarely"
