@@ -237,6 +237,7 @@ class Bot:
         if current_time - self.runes_made_at < 500:
             return False
 
+        #  mana = pyautogui.screenshot("ss/ss_mana.png", region=(1411, 148, 1, 1)) # MAC
         mana = pyautogui.screenshot("ss/ss_mana.png", region=(2520, 98, 1, 1))
         pix = pyautogui.pixel(2520 * self.win_or_mac, 98 * self.win_or_mac)
 
